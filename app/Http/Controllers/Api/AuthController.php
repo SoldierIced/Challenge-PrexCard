@@ -14,8 +14,8 @@ class AuthController extends Controller
         $this->validateLogin($request);
         try {
 
-            if (!Auth::attempt($request->only('email', 'password'))) {
-                return $this->sendResponse(null, 'Unauthorized', 'error', 401);
+            if (!Auth::guard("web")->attempt($request->only('email', 'password'))) {
+                return $this->sendResponse(null, 'Incorrect data', 'error', null, 401);
             }
 
             $token = $request->user()->createToken('api-token')->plainTextToken;

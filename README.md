@@ -4,6 +4,7 @@ Este proyecto es una API construida con Laravel que permite a los usuarios auten
 
 ### Consideraciones al Cambiar Puertos o URL
 
+Recordar que si tienen instalado Wamp /Xamp puede estar usando los mismos puertos que usa este proyecto. (se recomiendo cerrarlos).
 Si decides modificar los puertos o la URL base de la aplicación, asegúrate de actualizar los siguientes archivos para que reflejen los cambios:
 
 -   **Archivo `docker-compose.yml`**:
