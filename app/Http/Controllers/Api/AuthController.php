@@ -12,14 +12,18 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $this->validateLogin($request);
+        try {
 
-        if (!Auth::attempt($request->only('email', 'password'))) {
-            return $this->sendResponse(null, 'Unauthorized', 'error', 401);
+            if (!Auth::attempt($request->only('email', 'password'))) {
+                return $this->sendResponse(null, 'Unauthorized', 'error', 401);
+            }
+
+            $token = $request->user()->createToken('api-token')->plainTextToken;
+
+            return $this->sendResponse(['token' => $token], 'Login successful');
+        } catch (\Throwable $e) {
+            return $this->sendResponse(null, "an error has occurred", "error", $e, 500);
         }
-
-        $token = $request->user()->createToken('api-token')->plainTextToken;
-
-        return $this->sendResponse(['token' => $token], 'Login successful');
     }
 
     public function validateLogin(Request $request)
@@ -33,19 +37,23 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validateRegister($request);
+        try {
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
 
-        $token = $user->createToken('api-token')->plainTextToken;
+            $token = $user->createToken('api-token')->plainTextToken;
 
-        return $this->sendResponse([
-            'user' => $user,
-            'token' => $token,
-        ], 'Registration successful', 'success', 201);
+            return $this->sendResponse([
+                'user' => $user,
+                'token' => $token,
+            ], 'Registration successful', 'success');
+        } catch (\Throwable $e) {
+            return $this->sendResponse(null, "an error has occurred", "error", $e, 500);
+        }
     }
 
     public function validateRegister(Request $request)
