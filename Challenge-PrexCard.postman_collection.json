@@ -1,0 +1,343 @@
+{
+    "info": {
+        "_postman_id": "fc50e287-8d90-4b24-a94b-1d1d660c1e41",
+        "name": "Challenge-PrexCard",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "_exporter_id": "9989083"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "// Parse the response JSON\r",
+                                    "let responseData = pm.response.json();\r",
+                                    "\r",
+                                    "// Check if the response contains the token\r",
+                                    "if (responseData?.token) {\r",
+                                    "    // Set the token as an environment variable\r",
+                                    "    pm.collectionVariables.set(\"authToken\",\"Bearer \"+ responseData?.token ?? \"\");\r",
+                                    "    console.log(\"Token saved to environment variable: authToken\");\r",
+                                    "} else {\r",
+                                    "    console.log(\"Token not found in the response.\");\r",
+                                    "}\r",
+                                    "\r",
+                                    ""
+                                ],
+                                "type": "text/javascript",
+                                "packages": {}
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"test\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL_API}}login",
+                            "host": ["{{URL_API}}login"]
+                        },
+                        "description": "This endpoint allows a registered user to log in by providing their email and password. Upon successful authentication, an access token is returned, which can be used for accessing protected endpoints."
+                    },
+                    "response": [
+                        {
+                            "name": "New Request",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\r\n    \"email\": \"test@example.com\",\r\n    \"password\": \"test\"\r\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "http://localhost:8081/api/login",
+                                    "protocol": "http",
+                                    "host": ["localhost"],
+                                    "port": "8081",
+                                    "path": ["api", "login"]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Host",
+                                    "value": "127.0.0.1:8000"
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Mon, 25 Nov 2024 22:27:41 GMT"
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Mon, 25 Nov 2024 22:27:41 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "close"
+                                },
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "PHP/8.1.0"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                },
+                                {
+                                    "key": "Cache-Control",
+                                    "value": "no-cache, private"
+                                },
+                                {
+                                    "key": "X-RateLimit-Limit",
+                                    "value": "60"
+                                },
+                                {
+                                    "key": "X-RateLimit-Remaining",
+                                    "value": "59"
+                                },
+                                {
+                                    "key": "Access-Control-Allow-Origin",
+                                    "value": "*"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"status\": \"success\",\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"token\": \"22|AgYAlQ3LxQDf3Wba1g7Kls2CTQ10qUHUydHTLgYLf827168a\"\n    }\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "register",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"email\": \"test22@example.com\",\r\n    \"password\": \"testtest\",\r\n    \"name\":\"asd\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL_API}}register",
+                            "host": ["{{URL_API}}register"]
+                        },
+                        "description": "This endpoint allows a new user to register in the system. The user must provide a name, email, and password. Upon successful registration, the user will be able to log in and access other features of the system."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "gifs",
+            "item": [
+                {
+                    "name": "search",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "{{authToken}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{URL_API}}gifs/search?query=perro",
+                            "host": ["{{URL_API}}gifs"],
+                            "path": ["search"],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "perro"
+                                }
+                            ]
+                        },
+                        "description": "This endpoint allows users to search for GIFs using the Giphy API. Users can specify a search query, limit the number of results, and set an offset to paginate through results. The response includes a list of GIFs matching the search criteria."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "get id",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "{{authToken}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{URL_API}}gifs/DirPxXrUHKaCA",
+                            "host": ["{{URL_API}}gifs"],
+                            "path": ["DirPxXrUHKaCA"]
+                        },
+                        "description": "This endpoint retrieves detailed information about a specific GIF by its unique ID. The information includes metadata such as the GIF's URL, title, and other attributes."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "user/save",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "{{authToken}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"gif_id\":\"DirPxXrUHKaCA\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL_API}}gifs/user/save",
+                            "host": ["{{URL_API}}gifs"],
+                            "path": ["user", "save"]
+                        },
+                        "description": "This endpoint allows a user to save a GIF as a favorite. The user needs to provide the GIF ID, a custom alias for the GIF, and their user ID. The GIF is then associated with the user for future reference."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "user/delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "{{authToken}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\r\n    \"gif_id\":\"DirPxXrUHKaCA\"\r\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{URL_API}}gifs/user/delete",
+                            "host": ["{{URL_API}}gifs"],
+                            "path": ["user", "delete"]
+                        },
+                        "description": "This endpoint allows a user to remove a GIF from their list of favorites. The user must provide the GIF ID to delete the association. Once removed, the GIF will no longer appear in the user's favorites."
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "User",
+            "item": [
+                {
+                    "name": "myUser",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "{{authToken}}",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{URL_API}}users/myuser",
+                            "host": ["{{URL_API}}users"],
+                            "path": ["myuser"]
+                        },
+                        "description": "This endpoint retrieves the details of the currently authenticated user. The response includes information such as the user's name, email, and other profile data. The endpoint requires a valid access token."
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [""]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "packages": {},
+                "exec": [""]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "URL_API",
+            "value": "http://localhost:8081/api/",
+            "type": "string"
+        },
+        {
+            "key": "authToken",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
